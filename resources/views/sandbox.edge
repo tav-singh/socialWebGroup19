@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sandbox</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+        .cont {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="cont">
+        <img src="https://cdn.iconscout.com/icon/free/png-256/sandbox-8-449902.png" />
+        <h1>Box of Sand</h1>
+        <div>
+            <form method="POST" action="{{route('InstapingController.search')}}">
+                {{ csrfField() }}
+                <input type="text" placeholder="search users" name="query" />
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        @if(data.users)
+        <div>
+            <h3>Results for "{{query}}"</h3>
+            <h5>results found {{data.num_results}}</h5>
+            @each(user in data.users)
+                <p> {{user.username}} ({{user.full_name}}) </p>
+            @endeach
+        </div>
+        @endif
+    </div>
+</body>
+</html>
