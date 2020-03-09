@@ -21,21 +21,28 @@ class InstapingController {
             // console.error(e)
             return "error: " + err
         }
-        // const spawn = require("child_process").spawn;
-        const getUserScript = spawn('py',["./app/Python/search_user.py", query])
+    }
 
-        getUserScript.stdout.on('data', (data) => {
-            console.log(data.toString('utf8'))
-        })
-        getUserScript.stderr.on('data', (data) => {
-        console.log(`error:${data}`);
-        })
-        getUserScript.on('close', () => {
-        console.log("Closed");
-        })
+    async analyze ({request, response, params, view}) {
 
-        console.log("done")
-        return null
+        // check if exists in db here
+        // call nlp functions
+
+        try {
+
+            const result = await spawn('py',["./app/Python/get_feed.py", params.user_id])
+            let retval = {
+                query: params.user_id,
+                data: JSON.parse(result.toString('utf8'))
+            }
+            return view.render("sandbox_analysis", retval)
+        } catch (e) {
+            console.log(e)
+            let err = e.stderr.toString()
+            console.error("Error while getting search results")
+            // console.error(e)
+            return "error: " + err
+        }
       }
 }   
 

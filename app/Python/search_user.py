@@ -2,8 +2,8 @@ from instagram_private_api import Client, ClientCompatPatch
 import json
 import sys
 
-user_name = 'gamma12101'
-password = 'gamma1210'
+user_name = 'socialweb554'
+password = 'socialweb554.'
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
