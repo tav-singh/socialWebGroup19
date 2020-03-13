@@ -30,7 +30,7 @@ class InstapingController {
 
         try {
 
-            const result = await spawn('py',["./app/Python/get_feed.py", params.user_id])
+            const result = await spawn('py',["./app/Python/get_feed_web.py", params.user_id])
             let retval = {
                 query: params.user_id,
                 data: JSON.parse(result.toString('utf8'))
