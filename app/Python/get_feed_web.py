@@ -37,8 +37,8 @@ if __name__ == '__main__':
         }
 
         api_comments = Client(auto_patch=True, drop_incompat_keys=False)
-        comments_1 = api_comments.media_comments("B9C-gPhBKfH", count = 50)
-        comments_2 = api_comments.media_comments("B9C-gPhBKfH", count = 50, end_cursor = comments_1[0]["id"] )
+        comments_1 = api_comments.media_comments(media_shortcode, count = 50)
+        comments_2 = api_comments.media_comments(media_shortcode, count = 50, end_cursor = comments_1[0]["id"] )
 
         comments = comments_1 + comments_2
         comments_filtered = []
