@@ -4,22 +4,33 @@ import sys
 import re
 
 #1518284433 -  rober downey jr
-
+# 30588147,
 def cleanText(text):
-    ret = regex.sub(" ", text)
-    ret = ret.strip()
-    ret = ret.replace("  ", " ")
+    # ret = regex.sub(" ", text)
+    ret = re.sub("[#,!,?]", "", text)
+    new_str = ""
+    doc = ret.encode('ascii',errors='ignore').decode()
+    if "@" in doc:
+        for word in doc.split(" "):
+            if "@" in word:
+                continue
+            else:
+                new_str = new_str + word + " "
+    else:
+        new_str = new_str + doc
+    ret = new_str.strip()
+    # ret = ret.replace("  ", " ")
     return ret
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('Usage: python3 get_feed.py [query] [file_result]')
+        print('Usage: python3 get_feed.py [query] ')
         sys.exit(0)
 
     query = sys.argv[1]
 
     api = Client(auto_patch=True, drop_incompat_keys=False)
-    
+
     user_feed = api.user_feed(query, count=10)
 
     feed_data = {
@@ -50,7 +61,7 @@ if __name__ == '__main__':
         comments = comments_1 + comments_2
         comments_filtered = []
 
-        regex = re.compile('[^a-zA-Z0-9.]')
+        # regex = re.compile('[^a-zA-Z0-9.]')
         for item in comments:
             text = cleanText(item["text"])
             if text != "":
