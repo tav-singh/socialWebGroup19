@@ -1,3 +1,14 @@
+# Notes
+
+In the file where your instagram ping package is saved, in instagram_web_api/client.py
+replace the code in line 311 with:
+
+```python
+def _extract_rhx_gis(html):
+        tmp_str = ':{"id":"'+f'{random.randint(10000000,99999999)}'+'"}'
+        return hashlib.md5(b'tmp_str')
+```
+
 # Adonis fullstack application
 
 This is the fullstack boilerplate for AdonisJs, it comes pre-configured with.
