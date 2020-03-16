@@ -1,8 +1,15 @@
 from instagram_web_api import Client, ClientCompatPatch, ClientError, ClientLoginError
 import json
 import sys
+import re
 
 #1518284433 -  rober downey jr
+
+def cleanText(text):
+    ret = regex.sub(" ", text)
+    ret = ret.strip()
+    ret = ret.replace("  ", " ")
+    return ret
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -42,11 +49,15 @@ if __name__ == '__main__':
 
         comments = comments_1 + comments_2
         comments_filtered = []
+
+        regex = re.compile('[^a-zA-Z0-9.]')
         for item in comments:
-            comments_filtered.append(item["text"])
+            text = cleanText(item["text"])
+            if text != "":
+                comments_filtered.append(text)
 
         media_data["comments"] = comments_filtered
-        media_data["caption"] = data["caption"]["text"]
+        media_data["caption"] = cleanText(data["caption"]["text"])
         media_data["comment_count"] = data["comments"]["count"]
         media_data["like_count"] = data["likes"]["count"]
 
