@@ -19,6 +19,7 @@ def cleanText(text):
     else:
         new_str = new_str + doc
     ret = new_str.strip()
+    ret = re.sub("[\n,/,\\\]", "", ret)
     # ret = ret.replace("  ", " ")
     return ret
 
