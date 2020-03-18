@@ -51,12 +51,16 @@ class InstapingController {
 
             let classResults = []
             await fs.writeFile(appDir + '/public/analysis/' + username + '_result.json', JSON.stringify(classResults), 'utf8')
+            // await fs.writeFile(appDir + '/public/analysis/' + username + '_tokenized.json', JSON.stringify(tokened), 'utf8')
 
+            let feed_med = JSON.parse(result.toString('utf8'))
             let post_count = 0
             let cat_count = {}
             for (let token of tokened) {
                 let tempArr = []
                 let com_count = 0
+                let temp_cat_count = {}
+
                 for (let comment of token.comments) {
                     let clas = classifier.categorize(comment);
 
@@ -65,43 +69,35 @@ class InstapingController {
                         category: clas.predictedCategory
                     })
 
-                    if (cat_count[clas.predictedCategory])
+                    if (cat_count[clas.predictedCategory]) 
                         cat_count[clas.predictedCategory] = cat_count[clas.predictedCategory] + 1
                     else 
                         cat_count[clas.predictedCategory] = 1
 
+                    if (temp_cat_count[clas.predictedCategory]) 
+                    temp_cat_count[clas.predictedCategory] = temp_cat_count[clas.predictedCategory] + 1
+                    else 
+                    temp_cat_count[clas.predictedCategory] = 1
+
                     process.stdout.write("Classifying " + (com_count + 1) + " out of " + token.comments.length + " | " + (post_count + 1) + "/" + tokened.length + " \r");
                     com_count++
                 }
+
+                feed_med.media[post_count].comment_category = temp_cat_count
+
                 post_count++
                 classResults.push(tempArr)
                 await fs.writeFile(appDir + '/public/analysis/' + username + '_result.json', JSON.stringify(classResults), 'utf8')
                 await fs.writeFile(appDir + '/public/analysis/' + username + '_count.json', JSON.stringify(cat_count), 'utf8')
             }
             
-            // let temp = []
-            // let tempj = {}
-            // for (let posts of classResults) {
-            //     for (let item of posts) {
-            //         if (item.category == "Clothing, Shoes & Jewelry") {
-            //             if (!temp.includes(item.text)) {
-            //                 temp.push(item.text)
-            //                 tempj[item.text] = 1
-            //             } else {
-            //                 tempj[item.text] = tempj[item.text] + 1
-            //             }
-            //         }
-            //     }
-            // }
-
-            // await fs.writeFile(appDir + '/public/analysis/temp.json', JSON.stringify(tempj), 'utf8')
-            // await fs.writeFile(appDir + '/public/analysis/temp_arr.json', JSON.stringify(temp), 'utf8')
+            feed_med.categories = cat_count
 
             let retval = {
                 query: params.user_id,
                 // data: tokened
-                data: cat_count,
-                // data: JSON.parse(result.toString('utf8'))
+                // data: cat_count,
+                data: feed_med
             }
             return view.render("sandbox_analysis", retval)
         } catch (e) {
