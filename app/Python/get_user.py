@@ -21,7 +21,8 @@ if __name__ == '__main__':
         "followers": user["counts"]["followed_by"],
         "following": user["counts"]["follows"],
         "is_verified": user["is_verified"],
-        "fullname": user["full_name"]
+        "fullname": user["full_name"],
+        "profile_pic_url": user["profile_pic_url_hd"]
     }
 
     print(json.dumps(retval))

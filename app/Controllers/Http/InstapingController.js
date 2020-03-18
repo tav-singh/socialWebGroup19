@@ -4,6 +4,28 @@ const bayes = require('classificator')
 const fs = require('fs').promises;
 
 
+function convertCat(cat) {
+    var sortable = [];
+    for (var idx in cat) {
+        sortable.push([idx, cat[idx]]);
+    }
+
+    sortable.sort(function(a, b) {
+        return b[1] - a[1];
+    });
+
+    var retval = []
+    for (let idx in sortable) {
+        if (idx > 9) break
+        let item = sortable[idx]
+        retval.push({
+            category: item[0],
+            count: item[1]
+        })
+    }
+
+    return retval
+}
 class InstapingController {
 
     async search ({request, response, view}) {
@@ -25,6 +47,7 @@ class InstapingController {
             return "error: " + err
         }
     }
+
 
     async analyze ({request, response, params, view}) {
 
@@ -133,8 +156,8 @@ class InstapingController {
                 await fs.writeFile(appDir + '/public/analysis/' + username + '_count.json', JSON.stringify(cat_count), 'utf8')
             }
             
-            feed_med.comment_categories = cat_count
-            feed_med.caption_categories = cat_cap_count
+            feed_med.comment_categories = convertCat(cat_count)
+            feed_med.caption_categories = convertCat(cat_cap_count)
             feed_med.details = JSON.parse(user_details.toString('utf8'))
             await fs.writeFile(appDir + '/public/analysis/' + username + '_response.json', JSON.stringify(feed_med), 'utf8')
             
