@@ -56,10 +56,32 @@ class InstapingController {
             let feed_med = JSON.parse(result.toString('utf8'))
             let post_count = 0
             let cat_count = {}
+            let cat_cap_count = {}
             for (let token of tokened) {
                 let tempArr = []
+                let tempArrCap = []
                 let com_count = 0
                 let temp_cat_count = {}
+                let temp_cat_cap_count = {}
+
+                for (let caption_item of token.caption) {
+                    let clas = classifier.categorize(caption_item);
+
+                    tempArrCap.push({
+                        text: caption_item,
+                        category: clas.predictedCategory
+                    })
+
+                    if (cat_cap_count[clas.predictedCategory]) 
+                        cat_cap_count[clas.predictedCategory] = cat_cap_count[clas.predictedCategory] + 1
+                    else 
+                        cat_cap_count[clas.predictedCategory] = 1
+
+                    if (temp_cat_cap_count[clas.predictedCategory]) 
+                    temp_cat_cap_count[clas.predictedCategory] = temp_cat_cap_count[clas.predictedCategory] + 1
+                    else 
+                    temp_cat_cap_count[clas.predictedCategory] = 1
+                }
 
                 for (let comment of token.comments) {
                     let clas = classifier.categorize(comment);
@@ -84,6 +106,7 @@ class InstapingController {
                 }
 
                 feed_med.media[post_count].comment_category = temp_cat_count
+                feed_med.media[post_count].caption_category = temp_cat_cap_count
 
                 post_count++
                 classResults.push(tempArr)
@@ -91,7 +114,8 @@ class InstapingController {
                 await fs.writeFile(appDir + '/public/analysis/' + username + '_count.json', JSON.stringify(cat_count), 'utf8')
             }
             
-            feed_med.categories = cat_count
+            feed_med.comment_categories = cat_count
+            feed_med.caption_categories = cat_cap_count
 
             let retval = {
                 query: params.user_id,
