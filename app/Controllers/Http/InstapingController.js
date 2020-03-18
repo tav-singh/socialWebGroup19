@@ -40,8 +40,12 @@ class InstapingController {
             console.log("loading classifier")
             var savedClassifier = require(appDir + '/public/classifier_amazon_xs.json');
 
+            console.log("getting user details")
+            const user_details = await spawn('py',["./app/Python/get_user.py", params.username])
+
             console.log("getting feed")
             const result = await spawn('py',["./app/Python/get_feed_web.py", params.user_id])
+            
 
             console.log("getting tokenizer")
             const resTokenizer = await spawn('py',["./app/Python/nlp.py", appDir + "\\public\\feed.json"])
@@ -131,6 +135,7 @@ class InstapingController {
             
             feed_med.comment_categories = cat_count
             feed_med.caption_categories = cat_cap_count
+            feed_med.details = JSON.parse(user_details.toString('utf8'))
             await fs.writeFile(appDir + '/public/analysis/' + username + '_response.json', JSON.stringify(feed_med), 'utf8')
             
             let retval = {
