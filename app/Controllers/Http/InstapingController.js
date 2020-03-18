@@ -35,6 +35,7 @@ class InstapingController {
             var path = require('path');
             var appDir = path.dirname(require.main.filename);
             var username = params.username
+            var ifinn = require(appDir + '/public/ifinn.json')
 
             console.log("loading classifier")
             var savedClassifier = require(appDir + '/public/classifier_amazon_xs.json');
@@ -67,6 +68,9 @@ class InstapingController {
                 for (let caption_item of token.caption) {
                     let clas = classifier.categorize(caption_item);
 
+                    if (clas.predictedCategory == "Clothing, Shoes & Jewelry") 
+                        continue
+
                     tempArrCap.push({
                         text: caption_item,
                         category: clas.predictedCategory
@@ -83,8 +87,18 @@ class InstapingController {
                     temp_cat_cap_count[clas.predictedCategory] = 1
                 }
 
+                let comment_sentiment = 0
+                for (let adjective of token.adjectives) {
+                    let l_comment = adjective.toLowerCase()
+                    if (ifinn[l_comment] && l_comment != "fucking")
+                        comment_sentiment += ifinn[l_comment]
+                }
+
                 for (let comment of token.comments) {
                     let clas = classifier.categorize(comment);
+                    
+                    if (clas.predictedCategory == "Clothing, Shoes & Jewelry") 
+                    continue
 
                     tempArr.push({
                         text: comment,
@@ -107,6 +121,7 @@ class InstapingController {
 
                 feed_med.media[post_count].comment_category = temp_cat_count
                 feed_med.media[post_count].caption_category = temp_cat_cap_count
+                feed_med.media[post_count].sentiment = comment_sentiment
 
                 post_count++
                 classResults.push(tempArr)
@@ -116,7 +131,8 @@ class InstapingController {
             
             feed_med.comment_categories = cat_count
             feed_med.caption_categories = cat_cap_count
-
+            await fs.writeFile(appDir + '/public/analysis/' + username + '_response.json', JSON.stringify(feed_med), 'utf8')
+            
             let retval = {
                 query: params.user_id,
                 // data: tokened

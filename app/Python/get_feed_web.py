@@ -45,7 +45,6 @@ if __name__ == '__main__':
         media_shortcode = photo["node"]["shortcode"]
         data = photo["node"]
 
-
         media_data = {
             "media_shortcode": media_shortcode,
             "photo_url": data["display_url"],

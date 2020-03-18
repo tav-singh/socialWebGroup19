@@ -19,6 +19,15 @@ def tokenise_text(doc):
   
   return tokens
 
+def tokenise_text_adj(doc):
+  doc = doc.encode('ascii', errors='ignore').decode()
+
+  doc = nlp(doc, disable=['parser', 'ner'])
+  tokens = [tok.lemma_.lower().strip() for tok in doc if tok.lemma_ != '-PRON-' and (tok.pos_ == 'ADJ')]
+  tokens = list(filter(lambda a: len(a) > 2, tokens))
+  
+  return tokens
+
 
 def get_entity_dict(entities_dict, test_string):
   test_string = re.sub("[#,@,!,?]", "", test_string)
@@ -46,6 +55,7 @@ if __name__ == '__main__':
     for media in media_list:
       post_dict = {}
       comment_tokens = []
+      comment_tokens_adj = []
       caption = media["caption"]
       comments_list = media["comments"]
 
@@ -54,9 +64,16 @@ if __name__ == '__main__':
 
       for comments in comments_list:
         info_text = tokenise_text(comments)
+        info_text_adj = tokenise_text_adj(comments)
         if info_text and len(info_text) > 1:
           comment_tokens = comment_tokens + info_text
+
+        if info_text_adj and len(info_text_adj) > 1:
+          comment_tokens_adj = comment_tokens_adj + info_text_adj
+
+
       post_dict["comments"] = copy.deepcopy(comment_tokens)
+      post_dict["adjectives"] = copy.deepcopy(comment_tokens_adj)
       ret_json.append(post_dict)
 
   print(json.dumps(ret_json))
