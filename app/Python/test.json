@@ -1,0 +1,75 @@
+Error: child exited with code 2
+    at ChildProcess.<anonymous> (D:\School\VU Masters\P4\socialweb\socialWebGroup19\node_modules\await-spawn\index.js:28:21)
+    at ChildProcess.emit (events.js:311:20)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:275:12) {
+  code: 2,
+  stderr: BufferList {
+    _bufs: [
+      <Buffer 43 3a 5c 55 73 65 72 73 5c 67 61 6d 6d 61 5c 41 70 70 44 61 74 61 5c 4c 6f 63 61 6c 5c 50 72 6f 67 72 61 6d 73 5c 50 79 74 68 6f 6e 5c>,
+      <Buffer 50 79 74 68 6f 6e 33 38 5c 70 79 74 68 6f 6e 2e 65 78 65 3a 20 63 61 6e 27 74 20 6f 70 65 6e 20 66 69 6c 65 20 27 2e 2f 61 70 70 2f 50 79 74 68 6f 6e ... 46 more bytes>
+    ],
+    length: 141,
+    _readableState: ReadableState {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: BufferList { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: null,
+      pipesCount: 0,
+      flowing: null,
+      ended: false,
+      endEmitted: false,
+      reading: false,
+      sync: true,
+      needReadable: false,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      paused: true,
+      emitClose: true,
+      autoDestroy: false,
+      destroyed: false,
+      defaultEncoding: 'utf8',
+      awaitDrain: 0,
+      readingMore: false,
+      decoder: null,
+      encoding: null
+    },
+    readable: true,
+    _events: [Object: null prototype] {},
+    _eventsCount: 0,
+    _maxListeners: undefined,
+    _writableState: WritableState {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: true,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: [Function],
+      writecb: null,
+      writelen: 0,
+      bufferedRequest: null,
+      lastBufferedRequest: null,
+      pendingcb: 0,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: true,
+      autoDestroy: false,
+      bufferedRequestCount: 0,
+      corkedRequestsFree: [CorkedRequest]
+    },
+    writable: true,
+    allowHalfOpen: true,
+    [Symbol(kCapture)]: false
+  }
+}

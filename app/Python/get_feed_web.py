@@ -49,9 +49,9 @@ if __name__ == '__main__':
         media_data = {
             "media_shortcode": media_shortcode,
             "photo_url": data["display_url"],
-            "caption": None,
-            "comment_count": None,
-            "like_count": None,
+            "caption": "",
+            "comment_count": 0,
+            "like_count": 0,
             "comments": []
         }
 
@@ -65,15 +65,21 @@ if __name__ == '__main__':
         # regex = re.compile('[^a-zA-Z0-9.]')
         for item in comments:
             text = cleanText(item["text"])
+            text = text.replace('"', "")
             if text != "":
                 comments_filtered.append(text)
 
         media_data["comments"] = comments_filtered
-        media_data["caption"] = cleanText(data["caption"]["text"])
+        if data["caption"] is not None:
+            media_data["caption"] = cleanText(data["caption"]["text"])
+
         media_data["comment_count"] = data["comments"]["count"]
         media_data["like_count"] = data["likes"]["count"]
 
         feed_data["media"].append(media_data)
+
+    with open('./public/feed.json', 'w', encoding='utf-8') as f:
+        json.dump(feed_data, f, ensure_ascii=False, indent=4)
 
     print(json.dumps(feed_data))
     sys.stdout.flush()

@@ -85,7 +85,7 @@
         <div class="result-container">
             <div class="result-card">
                 @each(user in data.users)
-                    <a class="search-a no-link" href="{{ route('analysis', {user_id: user.pk} )}}">
+                    <a class="search-a no-link" href="{{ route('analysis', {user_id: user.pk, username: user.username} )}}">
                         <div class="search-card">
                             <img src={{user.profile_pic_url}} alt="">
                             <div>
