@@ -1,4 +1,5 @@
 # Notes
+Make sure you have the spacy "en_core_web_lg"
 
 In the file where your instagram ping package is saved, in instagram_web_api/client.py
 replace the code in line 311 with:
