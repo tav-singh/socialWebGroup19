@@ -1,3 +1,283 @@
 
+<!DOCTYPE html>
+<html lang="en">
 
-{{{ toJSON(data) }}}
+<head>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.css" />
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.3.6/dist/css/uikit.min.css" />
+
+  <!-- UIkit JS -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.6/dist/js/uikit.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.6/dist/js/uikit-icons.min.js"></script>
+  <meta charset="UTF-8" />
+
+
+  <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-exports.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-ui.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.anychart.com/releases/8.7.1/css/anychart-ui.min.css" />
+  <title>Sandbox</title>
+
+</head>
+
+<body class=" bg-gray-200 min-h-screen h-full ">
+  <div class="cont">
+    <div class="w-full  bg-green-500">
+      <div class="flex pt-8 px-16">
+        <img height="36" width="36" class="" src="https://cdn.iconscout.com/icon/free/png-256/sandbox-8-449902.png" />
+        <p class=" text-2xl px-12 text-white"> Influencial </p>
+      </div>
+      <div class="ml-24 py-5 mt-4">
+        <p class=" text-6xl px-12 text-white"> Analysis </p>
+      </div>
+    </div>
+    <div class=" flex ">
+      <div class=" mt-12 w-2/3">
+        <div class=" container is-fluid ">
+          <p class="text-lg pt-3 text-gray-700 font-bold">Caption Categories</p>
+          <div class="uk-grid-column-small  uk-child-width-1-6@s uk-text-center" uk-grid>
+            @each(category in data.caption_categories)
+            <div>
+              <div class="uk-card uk-card-default  rounded-lg uk-card-body">
+                <p class="font-semibold text-sm">{{ category.category }}</p>
+                <p> {{category.count}}</p>
+              </div>
+            </div>
+            @endeach
+          </div>
+        </div>
+
+        <div class=" container is-fluid ">
+          <p class="text-lg pt-3 text-gray-700 font-bold">Comment Categories</p>
+          <div class="uk-grid-column-small  uk-child-width-1-6@s uk-text-center" uk-grid>
+            @each(category in data.comment_categories)
+            <div>
+              <div class="uk-card uk-card-default  rounded-lg uk-card-body">
+                <p class="font-semibold text-sm">{{ category.category }}</p>
+                <p> {{category.count}}</p>
+              </div>
+            </div>
+            @endeach
+          </div>
+        </div>
+
+        <div class=" container is-fluid ">
+          <p class="text-lg py-3 text-gray-700 font-bold"> Average Parameters</p>
+          <div class=" flex ">
+            <div class=" w-1/2 px-4 ">
+              <canvas id="bar-chart" width="800" height="450"></canvas>
+            </div>
+            <div class=" w-1/2 px-4">
+              <canvas id="like-chart" width="800" height="450"></canvas>
+            </div>
+
+          </div>
+        </div>
+
+
+
+      </div>
+      <div class=" w-1/3 bg-white ">
+        <div>
+          <img class=" mt-10 h-48 w-48 rounded-full mx-auto" src="{{data.details.profile_pic_url}}" alt="">
+        </div>
+        <div class=" text-xl font-bold text-center mt-4">
+          <p> {{ data.username }} </p>
+        </div>
+        <div class=" text-lg font-semibold text-center mt-4">
+            <p> {{ data.details.fullname }} </p>
+          </div>
+          
+        <div class="flex my-auto justify-around">
+          <div>
+            <p class="my-auto"> Number of Followers </p>
+            <p class="text-3xl text-center">{{ data.details.followers }}</p>
+          </div>
+          <div>
+            <p class="my-auto"> Number of Posts </p>
+            <p class="text-3xl text-center">{{data.details.posts}}</p>
+          </div>
+        </div>
+        <div class="mt-10 px-16">
+          <div class="uk-grid-column-small uk-child-width-1-5@s uk-text-center" uk-grid>
+            @each(media in data.media)
+            <div onclick="onClickPost( {{ $loop.index }} )"
+              uk-tooltip="title:Comments : {{ media.comment_count }} , Likes : {{media.like_count}} ">
+              <div class="rounded-full img cover " style="background-image:url('{{ media.photo_url }}')">
+              </div>
+            </div>
+            @endeach
+          </div>
+        </div>
+        <div class=" mt-8 text-center">
+            <p class=" w-full mx-auto font-semibold text-gray-900  " > Categories of comments on the individual post </p>
+            <canvas id="doughnut-chart-comments" width="800" height="450"></canvas>
+        </div>
+        <div  class=" mt-8 text-center">
+            <p class=" w-full mx-auto font-semibold text-gray-900  "> Categories of captions on individual post </p>
+            <canvas id="doughnut-chart-captions" width="800" height="450"></canvas>
+        </div>
+        <div  class=" mt-8 text-center">
+            <p class=" w-full mx-auto font-semibold text-gray-900 " > Setiment analysis of comments </p>
+            <canvas id="bar-chart-sentiment" width="800" height="450"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <style>
+    .img {
+      float: left;
+      width: 64px;
+      height: 64px;
+      background-size: cover;
+    }
+
+  </style>
+
+  <script>
+    feather.replace()
+    let commentCountArray = [];
+    let likeCountArray = []
+    let sentimentArray = []
+    let passedData = {{{ toJSON(data) }}}
+
+    for (let index = 0; index < passedData.media.length; index++) {
+      commentCountArray.push(passedData.media[index].comment_count)
+      likeCountArray.push(passedData.media[index].like_count)
+      sentimentArray.push(passedData.media[index].sentiment)
+    }
+
+    
+    function updateData(chart, index) {
+        
+        chart.data.labels = Object.keys(passedData.media[index].comment_category);
+        chart.data.datasets[0].data = Object.values(passedData.media[index].comment_category)
+        chart.update();
+    }
+
+
+    function onClickPost(index){
+        console.log(index)
+        updateData(comment_chart,index)
+        updateData(caption_chart,index)
+    
+    }
+
+
+    new Chart(document.getElementById("bar-chart"), {
+      type: 'bar',
+
+      data: {
+        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        datasets: [{
+          label: "Comments",
+          backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#3e95cd", "#8e5ea2",
+            "#3cba9f", "#e8c3b9", "#c45850"
+          ],
+          data: commentCountArray
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'Comments per Post'
+        }
+      }
+    });
+
+    new Chart(document.getElementById("like-chart"), {
+      type: 'bar',
+
+      data: {
+        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        datasets: [{
+          label: "Likes",
+          backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#3e95cd", "#8e5ea2",
+            "#3cba9f", "#e8c3b9", "#c45850"
+          ],
+          data: likeCountArray
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'Likes per Post'
+        }
+      }
+    });
+
+    let comment_chart = new Chart(document.getElementById("doughnut-chart-comments"), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(passedData.media[0].comment_category),
+        datasets: [{
+          label: "Comments in category",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          data: Object.values(passedData.media[0].comment_category)
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Analysis of Comments'
+        }
+      }
+    });
+
+    let caption_chart = new Chart(document.getElementById("doughnut-chart-captions"), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(passedData.media[0].caption_category),
+        datasets: [{
+          label: "Comments in category",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          data: Object.values(passedData.media[0].caption_category)
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Analysis of Comments'
+        }
+      }
+    });
+
+     new Chart(document.getElementById("bar-chart-sentiment"), {
+      type: 'bar',
+      data: {
+        labels: ["1","2","3","4","5","6","7","8","9","10"],
+        datasets: [{
+          label: "Likes",
+          backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#3e95cd", "#8e5ea2",
+            "#3cba9f", "#e8c3b9", "#c45850"
+          ],
+          data: sentimentArray
+        }]
+      },
+      options: {
+        title: {
+          display: false,
+          text: 'Sentiment per post'
+        }
+      }
+    });
+
+
+  </script>
+</body>
+
+</html>
+

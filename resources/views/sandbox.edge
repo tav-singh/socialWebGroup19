@@ -1,103 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.css" />
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.3.6/dist/css/uikit.min.css" />
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.6/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.6/dist/js/uikit-icons.min.js"></script>    
     <meta charset="UTF-8" />
     <title>Sandbox</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
-        .cont {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        body {
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .search-card {
-            display: flex;
-            justify-content: flex-start;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-            border-radius: 5px;
-            padding: 15px;
-        }
-
-        .search-a {
-            width: 25%;
-            margin: 10px;
-        }
-
-        .search-card:hover {
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-        }
-
-        .search-card > img {
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-        }
-
-        .search-card > div {
-            margin-left: 10px; 
-        }
-
-        .result-card {
-            flex-wrap: wrap;
-            display: flex;
-            flex-direction: row;
-            width: 80%;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .result-container {
-            width:100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .no-link {
-            color:inherit;
-            text-decoration:none;
-        }
-    </style>
 
 </head>
-<body>
+<body class=" bg-gray-200 min-h-screen h-full ">
     <div class="cont">
-        <img src="https://cdn.iconscout.com/icon/free/png-256/sandbox-8-449902.png" />
-        <h1>Box of Sand</h1>
-        <div>
-            <form method="POST" action="{{route('InstapingController.search')}}">
-                {{ csrfField() }}
-                <input type="text" placeholder="search users" name="query" />
-                {{--  <input type="submit" value="Submit">  --}}
-            </form>
-        </div>
-        @if(data.users)
-        <h3>Results for "{{query}}"</h3>
-        <h5>results found {{data.num_results}}</h5>
-        <div class="result-container">
-            <div class="result-card">
-                @each(user in data.users)
-                    <a class="search-a no-link" href="{{ route('analysis', {user_id: user.pk, username: user.username} )}}">
-                        <div class="search-card">
-                            <img src={{user.profile_pic_url}} alt="">
-                            <div>
-                                <p> {{user.full_name}} </p>
-                                <p> {{user.username}} </p>
-                            </div>
-                        </div>
-                    </a>
-                @endeach
+        <div class="w-full  bg-green-500">
+            <div class="flex pt-8 px-16">
+                <img  height="36" width="36" class="" src="https://cdn.iconscout.com/icon/free/png-256/sandbox-8-449902.png" />
+                <p class=" text-2xl px-12 text-white"> Influencial </p>
             </div>
+            <div class="ml-24 py-5 mt-4">
+                <p class=" text-6xl px-12 text-white"> Search </p>
+            </div>
+        </div>    
+        <div class="bg-gray-200  h-full">
+            <div class="container mt-12 bg-white rounded-lg px-12 pb-2 bg-white" >
+                <form method="POST" action="{{route('InstapingController.search')}}">
+                    {{ csrfField() }}
+                    <div class="w-full p-4 flex h-full text-3xl">
+                        <i class=" mt-1 mr-4" data-feather="search"></i>
+                        <input  class="w-full text-xl outline-none" type="text" placeholder="search users" name="query" /> 
+                    </div>
+                    {{--  <input type="submit" value="Submit">  --}}
+                </form>
+            </div>
+            
         </div>
-        @endif
+        
+        <div class=" container mt-12 ">
+            @if(data.users)
+            <div class=" flex justify-between ">
+                <p class="text-lg">Results for "{{query}}"</p>
+                <p>{{data.num_results}} results found </p>
+                
+            </div>
+            <div class="uk-grid-column-small uk-grid-row-large uk-child-width-1-3@s uk-text-center" uk-grid>
+                @each(user in data.users)
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <a class="search-a no-link" href="{{ route('analysis', {user_id: user.pk, username: user.username} )}}">
+                            <div class="search-card ">
+                                <img class="rounded-full mx-auto " src={{user.profile_pic_url}} alt="">
+                                <p class="text-gray-600 text-2xl mt-4 text-center text-semibold "> {{user.username}} </p>
+                                <p class="text-gray-600  -mt-2 text-center text-semibold "> {{user.full_name}} </p>
+                             
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                @endeach
+               
+            </div>
+            @endif
+            
+        </div>
+        
+        
+
+
+
+
+        
     </div>
+    <script>
+        feather.replace()
+    </script>
 </body>
 </html>

@@ -60,21 +60,21 @@ class InstapingController {
             var username = params.username
             var ifinn = require(appDir + '/public/ifinn.json')
 
-            console.log("loading classifier")
+            console.log("Loading classifier") 
             var savedClassifier = require(appDir + '/public/classifier_amazon_xs.json');
 
-            console.log("getting user details")
+            console.log("Getting %s's user details", params.username)
             const user_details = await spawn('py',["./app/Python/get_user.py", params.username])
 
-            console.log("getting feed")
+            console.log("Getting %s's media feed", params.username)
             const result = await spawn('py',["./app/Python/get_feed_web.py", params.user_id])
             
 
-            console.log("getting tokenizer")
+            console.log("Tokenizing comments and captions")
             const resTokenizer = await spawn('py',["./app/Python/nlp.py", appDir + "\\public\\feed.json"])
             let tokened = JSON.parse(resTokenizer.toString('utf8'))
 
-            console.log("classifying")
+            console.log("Start classification")
             let classifier = bayes.fromJson(savedClassifier)
 
             let classResults = []
@@ -142,7 +142,7 @@ class InstapingController {
                     else 
                     temp_cat_count[clas.predictedCategory] = 1
 
-                    process.stdout.write("Classifying " + (com_count + 1) + " out of " + token.comments.length + " | " + (post_count + 1) + "/" + tokened.length + " \r");
+                    process.stdout.write("Classifying comments " + (com_count + 1) + " out of " + token.comments.length + " | post no: " + (post_count + 1) + "/" + tokened.length + " \r");
                     com_count++
                 }
 
@@ -160,7 +160,8 @@ class InstapingController {
             feed_med.caption_categories = convertCat(cat_cap_count)
             feed_med.details = JSON.parse(user_details.toString('utf8'))
             await fs.writeFile(appDir + '/public/analysis/' + username + '_response.json', JSON.stringify(feed_med), 'utf8')
-            
+            process.stdout.write("\nDone")
+
             let retval = {
                 query: params.user_id,
                 // data: tokened
