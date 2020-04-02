@@ -16,7 +16,7 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.on('/').render('welcome')
+Route.on('/').render('sandbox')
 Route.on('/sandbox').render('sandbox')
 Route.post('/sandbox', 'InstapingController.search')
 Route.on('/sandbox/search').render('search_result').as('search_result')
