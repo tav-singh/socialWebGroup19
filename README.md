@@ -5,6 +5,10 @@ Make sure you have the spacy "en_core_web_lg"
 In app/Python run:
 ```
 pip install instagram_private_api
+pip install -U spacy
+python -m spacy download en_core_web_lg
+
+
 ```
 
 In the file where your instagram ping package is saved, in instagram_web_api/client.py
@@ -48,3 +52,4 @@ Run the following command to run startup migrations.
 adonis migration:run
 ```
 # socialWebGroup19
+
