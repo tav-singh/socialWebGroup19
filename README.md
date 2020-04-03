@@ -1,4 +1,5 @@
-# Notes
+# SocialWebGroup19
+## Notes
 
 You will need node and npm to be able to run this project.
 The versions that this project was developed on were:
@@ -28,9 +29,4 @@ replace the code in line 311 with:
 def _extract_rhx_gis(html):
         tmp_str = ':{"id":"'+f'{random.randint(10000000,99999999)}'+'"}'
         return hashlib.md5(b'tmp_str')
-```
-
-
-```
-# socialWebGroup19
 
