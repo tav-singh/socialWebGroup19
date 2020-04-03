@@ -32,4 +32,6 @@ def _extract_rhx_gis(html):
 ```
 ### Running the app
 After doing the steps above, run the following command on your console to run the app.
-```adonis serve --dev```
+```
+adonis serve --dev
+```
