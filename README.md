@@ -1,6 +1,12 @@
 # Notes
 Make sure you have the spacy "en_core_web_lg"
 
+### The application needs the following python packages to be installed and configured.
+In app/Python run:
+```
+pip install instagram_private_api
+```
+
 In the file where your instagram ping package is saved, in instagram_web_api/client.py
 replace the code in line 311 with:
 
